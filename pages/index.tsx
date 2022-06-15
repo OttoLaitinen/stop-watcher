@@ -5,6 +5,7 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import useSWR from "swr";
 import useStore from "../util/store";
+import { useState } from "react";
 
 const fetcher = (query: string, variables?: { stationId: string }) =>
   request(
@@ -15,6 +16,10 @@ const fetcher = (query: string, variables?: { stationId: string }) =>
 
 const Home: NextPage = () => {
   const currentStationId = useStore((state) => state.currentStationId);
+  const changeCurrentStation = useStore((state) => state.changeCurrentStation);
+
+  const [newStationId, setNewStationId] = useState("");
+
   const { data, error } = useSWR(
     [
       `query Stations($stationId: String!) {
@@ -53,7 +58,6 @@ const Home: NextPage = () => {
           {station?.name}{" "}
           <a href="https://www.hsl.fi/en/citybikes">City Bike</a> Station
         </h1>
-
         <div className={styles.grid}>
           <div className={styles.card}>
             <h2>
@@ -65,6 +69,17 @@ const Home: NextPage = () => {
             </p>
           </div>
         </div>
+        <form onSubmit={() => changeCurrentStation(newStationId)}>
+          <label>
+            Change station (input id):
+            <input
+              type="text"
+              value={newStationId}
+              onChange={(event) => setNewStationId(event.target.value)}
+            />
+          </label>
+          <input type="submit" value="Change" />
+        </form>
       </main>
     </div>
   );
