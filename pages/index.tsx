@@ -2,30 +2,35 @@ import type { NextPage } from "next";
 import { request } from "graphql-request";
 
 import Head from "next/head";
-import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import useSWR from "swr";
+import useStore from "../util/store";
 
-const fetcher = (query: string) =>
+const fetcher = (query: string, variables?: { stationId: string }) =>
   request(
     "https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql",
-    query
+    query,
+    variables
   );
 
 const Home: NextPage = () => {
+  const currentStationId = useStore((state) => state.currentStationId);
   const { data, error } = useSWR(
-    `query Stations {
-      bikeRentalStation(id: "543") {
-        name
-        stationId
-        bikesAvailable
-        capacity
-        state
-        realtime
-        lon
-        lat
-      }
+    [
+      `query Stations($stationId: String!) {
+          bikeRentalStation(id: $stationId) {
+            name
+            stationId
+            bikesAvailable
+            capacity
+            state
+            realtime
+            lon
+            lat
+          }
     }`,
+      { stationId: currentStationId },
+    ],
     fetcher,
     { refreshInterval: 30 * 1000 }
   );
