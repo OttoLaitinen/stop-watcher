@@ -6,7 +6,10 @@
   #__next {
     @apply h-full;
   }
-  html,
+  html {
+    @apply text-hsl-black-text;
+    @apply h-full;
+  }
   body {
     @apply h-full;
   }

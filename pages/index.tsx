@@ -55,7 +55,7 @@ const Dashboard: NextPage = () => {
 
       <main className="flex flex-col justify-center items-center h-full">
         <div className="grid grid-cols-2 h-full w-full">
-          <div className="flex flex-col justify-center items-start h-full p-12 space-y-2">
+          <div className="flex flex-col justify-center items-start h-full p-12 space-y-4 font-rale">
             <h1 className="text-8xl font-semibold">Bike Watch</h1>
             <p className="text-2xl font-light max-w-prose">
               A web app to check how your closest city Helsinki region bike
@@ -65,10 +65,10 @@ const Dashboard: NextPage = () => {
               A hobby project by Otto A. Laitinen
             </p>
           </div>
-          <div className="flex flex-col justify-center items-center h-full bg-yellow-500 ">
-            <div className="flex flex-col bg-white p-8 rounded-2xl space-y-4 min-w-[600px]">
+          <div className="flex flex-col justify-center items-center h-full bg-hsl-yellow ">
+            <div className="flex flex-col bg-white px-8 pt-8 pb-4 rounded-2xl space-y-4 min-w-[600px]">
               <div className="flex flex-row space-x-4">
-                <div className="bg-yellow-500 rounded-lg h-20 w-20" />
+                <div className="bg-hsl-yellow rounded-lg h-20 w-20" />
                 <div className="flex flex-col">
                   <h1 className="text-4xl">{station?.name}</h1>
                   <p className="text-base font-light">
@@ -76,7 +76,7 @@ const Dashboard: NextPage = () => {
                   </p>
                 </div>
               </div>
-              <div className="flex flex-row space-x-3 align-start py-4">
+              <div className="flex flex-row space-x-7 items-baseline py-4">
                 <div className="text-8xl font-semibold ">
                   {station?.bikesAvailable}
                 </div>
@@ -85,13 +85,13 @@ const Dashboard: NextPage = () => {
               </div>
               <div className="w-full bg-gray-200 rounded-full h-6">
                 <div
-                  className="bg-green-600 h-6 rounded-full"
+                  className="bg-hsl-lightGreen h-6 rounded-full"
                   style={{
                     width: `${availabilityPercentage * 100}%`,
                   }}
                 ></div>
               </div>
-              <button className="text-zinc-600 text-lg font-semibold hover:text-opacity-75">
+              <button className="text-hsl-lightGrey-text text-xl font-semibold hover:text-opacity-75">
                 Change station
               </button>
             </div>
