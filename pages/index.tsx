@@ -5,21 +5,18 @@ import Head from "next/head";
 import useSWR from "swr";
 import useStore from "../util/store";
 import { useState } from "react";
+import { SmallBikeStationCard } from "../components/BikeStationCard";
+import { BikeRentalStation } from "../types/bikeRentalStation";
+import CardWindow from "../components/CardWindow";
+import Link from "next/link";
 
-const fetcher = (query: string, variables?: { stationId: string }) =>
-  request(
-    "https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql",
-    query,
-    variables
-  );
-
-const Dashboard: NextPage = () => {
+const Index: NextPage = () => {
   const currentStationId = useStore((state) => state.currentStationId);
   const changeCurrentStation = useStore((state) => state.changeCurrentStation);
 
   const [newStationId, setNewStationId] = useState("");
 
-  const { data, error } = useSWR(
+  const { data, error } = useSWR<BikeRentalStation>(
     [
       `query Stations($stationId: String!) {
           bikeRentalStation(id: $stationId) {
@@ -35,66 +32,57 @@ const Dashboard: NextPage = () => {
     }`,
       { stationId: currentStationId },
     ],
-    fetcher,
+    bikeStationFetcher,
     { refreshInterval: 30 * 1000 }
   );
-
-  const station = data?.bikeRentalStation;
-  const availabilityPercentage = station?.bikesAvailable / station?.capacity;
 
   return (
     <>
       <Head>
-        <title>{station?.name} City Bike Station</title>
+        <title>Bike Watch</title>
         <meta
           name="description"
-          content={`Shows the status of ${station?.name} City Bike Station`}
+          content={`Dashboard for showing the live status of city bike stations in the Helsinki Metropolitan area. By Otto A. Laitinen.`}
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex flex-col justify-center items-center h-full">
-        <div className="grid grid-cols-2 h-full w-full">
-          <div className="flex flex-col justify-center items-start h-full p-12 space-y-4 font-rale">
-            <h1 className="text-8xl font-semibold">Bike Watch</h1>
-            <p className="text-2xl font-light max-w-prose">
+      <main className="flex h-full flex-col items-center justify-center">
+        <div className="grid h-full w-full grid-cols-1 lg:grid-cols-2">
+          <div className="flex h-full flex-col items-start justify-center gap-4 p-12 font-rale">
+            <h1 className="text-9xl font-semibold">Bike Watch</h1>
+            <p className="max-w-prose text-2xl font-light">
               A web app to check how your closest city Helsinki region bike
               station is doing. Designed to be used as dashboard.
             </p>
-            <p className="justify-self-end font-light text-2xl max-w-prose">
-              A hobby project by Otto A. Laitinen
+            <p className="max-w-prose justify-self-end text-2xl font-light">
+              A hobby project by <a href="https://oal.fi">Otto A. Laitinen</a>
             </p>
           </div>
-          <div className="flex flex-col justify-center items-center h-full bg-hsl-yellow ">
-            <div className="flex flex-col bg-white px-8 pt-8 pb-4 rounded-2xl space-y-4 min-w-[600px]">
-              <div className="flex flex-row space-x-4">
-                <div className="bg-hsl-yellow rounded-lg h-20 w-20" />
-                <div className="flex flex-col">
-                  <h1 className="text-4xl">{station?.name}</h1>
-                  <p className="text-base font-light">
-                    Bike station {station?.stationId}
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-row space-x-7 items-baseline py-4">
-                <div className="text-8xl font-semibold ">
-                  {station?.bikesAvailable}
-                </div>
-                <div className="text-8xl">/</div>
-                <div className="text-8xl">{station?.capacity}</div>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-6">
-                <div
-                  className="bg-hsl-lightGreen h-6 rounded-full"
-                  style={{
-                    width: `${availabilityPercentage * 100}%`,
-                  }}
-                ></div>
-              </div>
-              <button className="text-hsl-lightGrey-text text-xl font-semibold hover:text-opacity-75">
-                Change station
-              </button>
+          <div className="flex h-full flex-col items-center justify-center gap-10 bg-white ">
+            {data && (
+              <CardWindow>
+                <SmallBikeStationCard
+                  name={data.name}
+                  stationId={data.stationId}
+                  bikesAvailable={data.bikesAvailable}
+                  capacity={data.capacity}
+                />
+              </CardWindow>
+            )}
+            <div className="flex flex-col gap-2 font-rale text-xl">
+              <h2 className="font-semibold">Customisable</h2>
+              <p className="w-[560px] max-w-prose">
+                Check the status of your closest stations on the go or customise
+                the dashboard to show you only the stations you want.
+              </p>
             </div>
+            <Link href="/dashboard">
+              <a className="rounded-full bg-hsl-yellow py-4 px-6 text-xl font-bold">
+                Open Dashboard
+              </a>
+            </Link>
+            <div></div>
           </div>
         </div>
       </main>
@@ -102,4 +90,17 @@ const Dashboard: NextPage = () => {
   );
 };
 
-export default Dashboard;
+export default Index;
+
+const bikeStationFetcher = async (
+  query: string,
+  variables?: { stationId: string }
+): Promise<BikeRentalStation> => {
+  const answer = await request(
+    "https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql",
+    query,
+    variables
+  );
+
+  return answer?.bikeRentalStation;
+};
