@@ -1,4 +1,4 @@
-export const parseStationState = (stationState) => {
+export const parseStationState = (stationState: string) => {
   switch (stationState) {
     case "Station on":
       return "on";
