@@ -13,7 +13,7 @@ const Dashboard: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <div>lol</div>
+        <div>Still very much WIP :D </div>
       </main>
     </>
   );

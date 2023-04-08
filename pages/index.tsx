@@ -9,17 +9,14 @@ import { SmallBikeStationCard } from "../components/BikeStationCard";
 import { BikeRentalStation } from "../types/bikeRentalStation";
 import CardWindow from "../components/CardWindow";
 import Link from "next/link";
+import { client } from "../util/graphqlClient";
 
 const Index: NextPage = () => {
-  const currentStationId = useStore((state) => state.currentStationId);
-  const changeCurrentStation = useStore((state) => state.changeCurrentStation);
-
-  const [newStationId, setNewStationId] = useState("");
-
-  const { data, error } = useSWR<BikeRentalStation>(
+  const fetchedStationIds = useStore((state) => state.fetchedStationIds);
+  const { data, error } = useSWR<BikeRentalStation[] | undefined>(
     [
-      `query Stations($stationId: String!) {
-          bikeRentalStation(id: $stationId) {
+      `query Stations($stationIds: [String]!) {
+          bikeRentalStations(ids: $stationIds) {
             name
             stationId
             bikesAvailable
@@ -30,7 +27,7 @@ const Index: NextPage = () => {
             lat
           }
     }`,
-      { stationId: currentStationId },
+      { stationIds: fetchedStationIds },
     ],
     bikeStationFetcher,
     { refreshInterval: 30 * 1000 }
@@ -60,16 +57,7 @@ const Index: NextPage = () => {
             </p>
           </div>
           <div className="flex h-full flex-col items-center justify-center gap-10 bg-white ">
-            {data && (
-              <CardWindow>
-                <SmallBikeStationCard
-                  name={data.name}
-                  stationId={data.stationId}
-                  bikesAvailable={data.bikesAvailable}
-                  capacity={data.capacity}
-                />
-              </CardWindow>
-            )}
+            {data && <CardWindow bikeStations={data} />}
             <div className="flex flex-col gap-2 font-rale text-xl">
               <h2 className="font-semibold">Customisable</h2>
               <p className="w-[560px] max-w-prose">
@@ -95,12 +83,13 @@ export default Index;
 const bikeStationFetcher = async (
   query: string,
   variables?: { stationId: string }
-): Promise<BikeRentalStation> => {
-  const answer = await request(
-    "https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql",
-    query,
-    variables
-  );
-
-  return answer?.bikeRentalStation;
+): Promise<BikeRentalStation[] | undefined> => {
+  try {
+    const answer = await client.request(query, variables);
+    return answer?.bikeRentalStations.filter(
+      (station: BikeRentalStation | null | undefined) => station !== null
+    );
+  } catch (e) {
+    console.error(e);
+  }
 };

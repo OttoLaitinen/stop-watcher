@@ -15,8 +15,11 @@ module.exports = {
       colors: {
         "hsl-yellow": "#F2B52C",
         "hsl-lightGreen": "#63BE1E",
+        "hsl-fadedGreen": " #D0E6BD",
         "hsl-black-text": "#333333",
         "hsl-lightGrey-text": "#666666",
+        "hsl-warningRed": "#DC0451",
+        "hsl-middleGrey": "#666666",
       },
       boxShadow: {
         "inner-md":
