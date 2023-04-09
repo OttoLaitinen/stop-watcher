@@ -16,7 +16,7 @@ const LandingPage = () => {
         <div className="flex h-full flex-col items-start justify-center gap-4 p-12 font-rale">
           <h1 className="text-9xl font-semibold">Bike Watch</h1>
           <p className="max-w-prose text-2xl font-light">
-            A web app to check how your closest city Helsinki region bike
+            A web app to check how your closest Helsinki region city bike
             station is doing. Designed to be used as dashboard.
           </p>
           <p className="max-w-prose justify-self-end text-2xl font-light">
