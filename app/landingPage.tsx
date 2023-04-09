@@ -1,38 +1,16 @@
-import type { NextPage } from "next";
-import { request } from "graphql-request";
+import type { Metadata } from "next";
 
 import Head from "next/head";
-import useSWR from "swr";
-import useStore from "../util/store";
-import { useState } from "react";
-import { SmallBikeStationCard } from "../components/BikeStationCard";
-import { BikeRentalStation } from "../types/bikeRentalStation";
-import CardWindow from "../components/CardWindow";
 import Link from "next/link";
-import { client } from "../util/graphqlClient";
+import CardWindow from "./components/CardWindow";
 
-const Index: NextPage = () => {
-  const fetchedStationIds = useStore((state) => state.fetchedStationIds);
-  const { data, error } = useSWR<BikeRentalStation[] | undefined>(
-    [
-      `query Stations($stationIds: [String]!) {
-          bikeRentalStations(ids: $stationIds) {
-            name
-            stationId
-            bikesAvailable
-            capacity
-            state
-            realtime
-            lon
-            lat
-          }
-    }`,
-      { stationIds: fetchedStationIds },
-    ],
-    bikeStationFetcher,
-    { refreshInterval: 30 * 1000 }
-  );
+export const metadata: Metadata = {
+  title: "Bike Watch",
+  description:
+    "Dashboard for showing the live status of city bike stations in the Helsinki Metropolitan area. By Otto A. Laitinen.",
+};
 
+const LandingPage = () => {
   return (
     <>
       <Head>
@@ -57,7 +35,7 @@ const Index: NextPage = () => {
             </p>
           </div>
           <div className="flex h-full flex-col items-center justify-center gap-10 bg-white ">
-            {data && <CardWindow bikeStations={data} />}
+            <CardWindow />
             <div className="flex flex-col gap-2 font-rale text-xl">
               <h2 className="font-semibold">Customisable</h2>
               <p className="w-[560px] max-w-prose">
@@ -67,7 +45,7 @@ const Index: NextPage = () => {
             </div>
             <Link
               href="/dashboard"
-              className="rounded-full bg-hsl-yellow py-4 px-6 text-xl font-bold"
+              className="rounded-full bg-hsl-yellow py-4 px-6 text-xl font-semibold"
             >
               Open Dashboard
             </Link>
@@ -79,18 +57,4 @@ const Index: NextPage = () => {
   );
 };
 
-export default Index;
-
-const bikeStationFetcher = async (
-  query: string,
-  variables?: { stationId: string }
-): Promise<BikeRentalStation[] | undefined> => {
-  try {
-    const answer = await client.request(query, variables);
-    return answer?.bikeRentalStations.filter(
-      (station: BikeRentalStation | null | undefined) => station !== null
-    );
-  } catch (e) {
-    console.error(e);
-  }
-};
+export default LandingPage;

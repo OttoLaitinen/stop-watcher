@@ -1,17 +1,24 @@
-import { useEffect, useState } from "react";
-import { BikeRentalStation } from "../types/bikeRentalStation";
-import { SmallBikeStationCard } from "./BikeStationCard";
+"use client";
+
 import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { useGetBikeRentalStationsByIds } from "../clientSideDataFetching/bikeRentalStations";
+import useStore from "../util/store";
+import { SmallBikeStationCard } from "./BikeStationCard";
 
 const CARD_CHANGE_TIMEOUT_MS = 8000;
 
-const CardWindow = ({ bikeStations }: Props): JSX.Element => {
+const CardWindow = (): JSX.Element | null => {
+  const fetchedStationIds = useStore((state) => state.fetchedStationIds);
+
+  const { data: bikeStations, error } =
+    useGetBikeRentalStationsByIds(fetchedStationIds);
   const [displayedCardIndex, setDisplayedCardIndex] = useState(0);
 
   useEffect(() => {
     const changeCard = () => {
       setDisplayedCardIndex((current) => {
-        if (current < bikeStations.length - 1) {
+        if (bikeStations && current < bikeStations.length - 1) {
           return current + 1;
         }
         return 0;
@@ -21,7 +28,14 @@ const CardWindow = ({ bikeStations }: Props): JSX.Element => {
       changeCard();
     }, CARD_CHANGE_TIMEOUT_MS);
     return () => clearInterval(cardChangeInterval);
-  }, [bikeStations.length]);
+  }, [bikeStations, bikeStations?.length]);
+
+  if (error) return null;
+
+  if (!bikeStations)
+    return (
+      <div className="relative z-50 flex h-[320px] w-[560px] flex-row items-center justify-center overflow-hidden rounded-2xl bg-gray-300 shadow-inner-md" />
+    );
 
   return (
     <div className="relative z-50 flex h-[320px] w-[560px] flex-row items-center justify-center overflow-hidden rounded-2xl bg-hsl-yellow shadow-inner-md">
@@ -63,9 +77,5 @@ const variants = {
     opacity: 0,
   },
 };
-
-interface Props {
-  bikeStations: BikeRentalStation[];
-}
 
 export default CardWindow;

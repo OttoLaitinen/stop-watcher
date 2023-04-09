@@ -3,14 +3,15 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
   content: [
+    "./app/**/*.{js,ts,jsx,tsx}",
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Nunito", ...defaultTheme.fontFamily.sans],
-        rale: ["Raleway", ...defaultTheme.fontFamily.sans],
+        sans: ["var(--font-nunito)"],
+        rale: ["var(--font-raleway)"],
       },
       colors: {
         "hsl-yellow": "#F2B52C",
