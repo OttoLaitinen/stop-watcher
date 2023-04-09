@@ -13,6 +13,7 @@ const CardWindow = (): JSX.Element | null => {
 
   const { data: bikeStations, error } =
     useGetBikeRentalStationsByIds(fetchedStationIds);
+
   const [displayedCardIndex, setDisplayedCardIndex] = useState(0);
 
   useEffect(() => {
