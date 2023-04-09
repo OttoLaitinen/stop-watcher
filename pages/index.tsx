@@ -65,10 +65,11 @@ const Index: NextPage = () => {
                 the dashboard to show you only the stations you want.
               </p>
             </div>
-            <Link href="/dashboard">
-              <a className="rounded-full bg-hsl-yellow py-4 px-6 text-xl font-bold">
-                Open Dashboard
-              </a>
+            <Link
+              href="/dashboard"
+              className="rounded-full bg-hsl-yellow py-4 px-6 text-xl font-bold"
+            >
+              Open Dashboard
             </Link>
             <div></div>
           </div>
