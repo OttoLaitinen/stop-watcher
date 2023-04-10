@@ -53,29 +53,30 @@ export const SmallBikeStationCard = ({
   return (
     <div
       key={stationId}
-      className="flex w-[480px] flex-col space-y-4 rounded-2xl bg-white px-6 pt-5 pb-5 drop-shadow-md"
+      className="flex w-[300px] flex-col gap-y-3 rounded-xl bg-white px-4 pb-5 pt-10 drop-shadow-md"
     >
       <div className="absolute top-2 right-2">
         <BikeStationStatePill stationState={state} />
       </div>
 
       <div className="flex flex-row justify-between">
-        <div className="flex flex-row justify-center space-x-4">
+        <div className="flex flex-row items-center justify-start gap-x-2">
           <BikeAvatar />
+
           <div className="flex flex-col justify-center">
-            <h1 className="p-0 text-xl font-semibold">{name}</h1>
+            <h1 className="p-0 text-sm font-semibold">{name}</h1>
           </div>
         </div>
-        <div className="flex flex-row items-baseline gap-2 py-4">
-          <div className="text-4xl font-semibold ">{bikesAvailable}</div>
-          <div className="text-4xl">/</div>
-          <div className="text-4xl">{capacity}</div>
+        <div className="flex flex-row items-baseline gap-x-1">
+          <div className="text-2xl font-semibold ">{bikesAvailable}</div>
+          <div className="text-2xl">/</div>
+          <div className="text-2xl">{capacity}</div>
         </div>
       </div>
 
-      <div className="h-3 w-full rounded-full bg-gray-200">
+      <div className="h-2 w-full rounded-full bg-gray-200">
         <div
-          className="h-3 rounded-full bg-hsl-lightGreen"
+          className="h-2 rounded-full bg-hsl-lightGreen"
           style={{
             width: `${availabilityPercentage * 100}%`,
           }}
@@ -88,7 +89,7 @@ export const SmallBikeStationCard = ({
 const BikeAvatar = () => {
   return (
     <div
-      className="h-16 w-16 flex-shrink-0 rounded-lg bg-hsl-yellow p-1"
+      className="aspect-square w-10 flex-shrink-0 rounded-lg bg-hsl-yellow p-1"
       aria-hidden
     >
       <Image src={bikeIcon} alt="Bicycle icon" />
@@ -105,7 +106,7 @@ const BikeStationStatePill = ({ stationState }: { stationState: string }) => {
 
   if (parsedState === "on") {
     return (
-      <div className="flex w-fit items-center justify-center rounded-2xl bg-hsl-lightGreen px-2 py-1">
+      <div className="flex w-fit items-center justify-center rounded-2xl bg-hsl-lightGreen px-1.5 py-0.5">
         <PillText>Online</PillText>
       </div>
     );
@@ -113,14 +114,14 @@ const BikeStationStatePill = ({ stationState }: { stationState: string }) => {
 
   if (parsedState === "off") {
     return (
-      <div className="flex w-fit items-center justify-center rounded-2xl bg-hsl-warningRed px-2">
+      <div className="flex w-fit items-center justify-center rounded-2xl bg-hsl-warningRed px-1.5 py-0.5">
         <PillText>Offline</PillText>
       </div>
     );
   }
 
   return (
-    <div className="flex w-fit items-center justify-center rounded-2xl bg-hsl-middleGrey px-2">
+    <div className="flex w-fit items-center justify-center rounded-2xl bg-hsl-middleGrey px-1.5 py-0.5">
       <PillText>Station status unknown</PillText>
     </div>
   );

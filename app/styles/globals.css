@@ -8,9 +8,12 @@
   }
   html {
     @apply text-hsl-black-text;
-    @apply h-full;
+    @apply min-h-full;
   }
   body {
-    @apply h-full;
+    @apply min-h-full;
+  }
+  main {
+    @apply min-h-full;
   }
 }

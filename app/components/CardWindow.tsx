@@ -35,12 +35,12 @@ const CardWindow = (): JSX.Element | null => {
 
   if (!bikeStations)
     return (
-      <div className="relative z-50 flex h-[320px] w-[560px] flex-row items-center justify-center overflow-hidden rounded-2xl bg-gray-300 shadow-inner-md" />
+      <div className="relative z-50 flex h-[240px] w-full flex-row items-center justify-center overflow-hidden bg-hsl-yellow px-6 shadow-inner-md" />
     );
 
   return (
-    <div className="relative z-50 flex h-[320px] w-[560px] flex-row items-center justify-center overflow-hidden rounded-2xl bg-hsl-yellow shadow-inner-md">
-      <AnimatePresence initial={false}>
+    <div className="relative z-50 flex h-[240px] w-full flex-row items-center justify-center overflow-hidden bg-hsl-yellow px-6 shadow-inner-md">
+      <AnimatePresence initial={false} mode="wait">
         <motion.div
           key={displayedCardIndex}
           initial="enter"
@@ -48,7 +48,6 @@ const CardWindow = (): JSX.Element | null => {
           exit="exit"
           variants={variants}
           transition={{ duration: 1 }}
-          className="absolute"
         >
           <SmallBikeStationCard
             stationId={bikeStations[displayedCardIndex].stationId}
